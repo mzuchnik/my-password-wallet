@@ -4,28 +4,30 @@
 <head>
     <meta charset="UTF-8">
     <title>Login Page</title>
-
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" th:href="@{/css/style.css}" />
 </head>
 <body>
-<form method="post" th:action="@{/login}">
-    <table>
-        <tr>
-            <td><label for="username">Login: </label></td>
-            <td><input id="username" name="username" type="text"/></td>
-        </tr>
-        <tr>
-            <td><label for="password">Password: </label></td>
-            <td><input id="password" name="password" type="password"/></td>
-        </tr>
-        <tr>
-            <td><input type="submit" value="Sign in"/></td>
-        </tr>
-    </table>
-</form>
-<form method="get" th:action="@{/sign-up}">
-<input type="submit" value="Sign up">
-</form>
 
+<div class="login">
+    <h1>Login</h1>
+    <span th:if="${lockTime != null and !lockTime.isEmpty()}" style="color: red">
+        Your have been blocked for <span th:text="${lockTime}"></span> seconds.</span>
+    <span th:if="${param.error}" style="color: red">Incorrect username or password.</span>
+    <span th:if="${param.logout}" style="color: lawngreen">You have been logged out.</span>
+    <form method="post" th:action="@{/login}">
+        <input type="text" name="username" placeholder="Username" required="required"/>
+        <input type="password" name="password" placeholder="Password" required="required"/>
+        <button type="submit" class="btn btn-primary btn-block btn-large">Log in.</button>
+    </form>
+    <form method="get" th:action="@{/sign-up}">
+        <button type="submit" class="btn btn-secondary btn-block btn-large">Create account.</button>
+    </form>
+</div>
 
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN" crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+<script th:src="@{/js/main.js}"></script>
 </body>
 </html>

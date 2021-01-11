@@ -4,67 +4,320 @@
 <head>
     <meta charset="UTF-8">
     <title>My wallet</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
     <link th:href="@{/css/style.css}" rel="stylesheet">
+    <link th:href="@{/css/table.css}" rel="stylesheet">
+    <link th:href="@{/css/mystyle.css}" rel="stylesheet">
+    <!--<link th:href="@{/css/table-util.css}" rel="stylesheet">-->
 </head>
 <body>
-<h2>My Password Wallet</h2>
-<div class="wallet-content">
-    <table class="wallet-list">
-        <tr>
-            <td><b>Web address: </b></td>
-            <td><b>Web login: </b></td>
-            <td><b>Web password: </b></td>
-            <td><b>Web description: </b></td>
-        </tr>
-        <tr class="wallet-item" th:each="userPassword : ${userPasswords}">
-            <td class="user-password-url">
-                <th:block th:text="${userPassword.webAddress}"></th:block>
-            </td>
-            <td class="user-password-login">
-                <th:block th:text="${userPassword.webLogin}"></th:block>
-            </td>
-            <td class="user-password-password">
-                <th:block th:text="${userPassword.webPassword}"></th:block>
-            </td>
-            <td class="user-password-description">
-                <th:block th:text="${userPassword.webDescription}"></th:block>
-            </td>
-        </tr>
-    </table>
-    <p><b>Actions: </b></p>
-    <div style="margin-bottom: 30px;">
-        <a href="/wallet?encryptor=encrypt" style="text-decoration: none; padding: 15px; background-color: beige">Encrypt
-            Password</a>
-        <a href="/wallet?encryptor=decrypt" style="text-decoration: none; padding: 15px; background-color: beige">Decrypt
-            Password</a>
-        <a href="/logout" style="text-decoration: none; padding: 15px; background-color: indianred">Logout</a>
-        <a href="/changePassword" style="text-decoration: none; padding: 15px; background-color: aquamarine">Change Account Password</a>
+<!--  Modal section  -->
+<div class="container-main-info">
+
+    <!--USER WALLET TABLE OF PASSWORDS-->
+    <div class="wallet-table">
+        <div class="container-table100">
+            <div class="wrap-table100">
+                <h2>My Password Wallet</h2>
+                <div class="wallet-content">
+                    <table class="wallet-list">
+                        <thead>
+                        <tr class="table100-head">
+                            <th class="wallet-item"><b>Web address: </b></th>
+                            <th class="wallet-item"><b>Web login: </b></th>
+                            <th class="wallet-item"><b>Web password: </b></th>
+                            <th class="wallet-item"><b>Web description: </b></th>
+                            <th class="wallet-item"><b>Actions: </b></th>
+                        </tr>
+                        </thead>
+                        <th:block th:each="userPassword : ${userPasswords}">
+                            <tr id="wallet-passwords-table" class="wallet-items" >
+                                <td class="wallet-item">
+                                    <th:block th:text="${userPassword.webAddress}"></th:block>
+                                </td>
+                                <td class="wallet-item">
+                                    <th:block th:text="${userPassword.webLogin}"></th:block>
+                                </td>
+                                <td class="wallet-item">
+                                    <th:block th:text="${userPassword.webPassword}"></th:block>
+                                </td>
+                                <td class="wallet-item">
+                                    <th:block th:text="${userPassword.webDescription}"></th:block>
+                                </td>
+                                <td class="wallet-item">
+                                    <button class="btn btn-primary share-password-btn" th:value="${userPassword.id}">Share</button><br>
+                                    <form method="get" th:action="@{/wallet/edit/{id}(id=${userPassword.id})}">
+                                        <input type="submit" class="btn btn-primary edit-password-btn" value="Edit">
+                                    </form>
+                                </td>
+                            </tr>
+                        </th:block>
+                    </table>
+                    <p><b>Actions: </b></p>
+                    <div style="margin-bottom: 30px;">
+                        <a href="/wallet?encryptor=encrypt"
+                           style="text-decoration: none; padding: 15px; background-color: beige">Encrypt
+                            Password</a>
+                        <a href="/wallet?encryptor=decrypt"
+                           style="text-decoration: none; padding: 15px; background-color: beige">Decrypt
+                            Password</a>
+                        <form th:action="@{/logout}" method="post" style="display: inline-block">
+                            <input type="submit" value="Logout"
+                                   style="text-decoration: none; padding: 15px; background-color: indianred;">
+                        </form>
+                        <a href="/changePassword"
+                           style="text-decoration: none; padding: 15px; background-color: aquamarine">Change
+                            Account Password</a>
+                        <a id="showNewPasswordForm"
+                           style="text-decoration: none; padding: 15px; background-color: lightgreen">Add new password
+                            to
+                            wallet</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!--ADD NEW PASSWORD FORM-->
+        <div class="container-table100">
+            <div class="wrap-table100">
+                <div id="password-form" class="add-new-password hidden-form">
+                    <form th:action="@{/wallet/add}" th:object="${passwordForm}" method="post">
+                        <h4>Add new password:</h4>
+                        <table>
+                            <tr>
+                                <td class="add-password-label"><label th:for="*{webAddress}">Web Address: </label></td>
+                                <td class="add-password-input"><input type="text" th:field="*{webAddress}"></td>
+                            </tr>
+                            <tr>
+                                <td class="add-password-label"><label th:for="*{webDescription}">Description: </label></td>
+                                <td class="add-password-input"><input type="text" th:field="*{webDescription}"></td>
+                            </tr>
+                            <tr>
+                                <td class="add-password-label"><label th:for="*{webLogin}">Login: </label></td>
+                                <td class="add-password-input"><input type="text" th:field="*{webLogin}"></td>
+                            </tr>
+                            <tr>
+                                <td class="add-password-label"><label th:for="*{webPassword}">Password: </label></td>
+                                <td class="add-password-input"><input type="password" th:field="*{webPassword}"></td>
+                            </tr>
+                        </table>
+                        <input type="submit" value="Add">
+                    </form>
+                </div>
+            </div>
+        </div>
+        <!-- Share Password By User Table-->
+        <div class="container-table100">
+            <div class="wrap-table100">
+                <h2>Your shared passwords</h2>
+                <div class="wallet-content">
+                    <table class="wallet-list">
+                        <thead>
+                        <tr class="table100-head">
+                            <th class="wallet-item"><b>Owner: </b></th>
+                            <th class="wallet-item"><b>Consumer: </b></th>
+                            <th class="wallet-item"><b>Share date: </b></th>
+                            <th class="wallet-item"><b>Web address: </b></th>
+                            <th class="wallet-item"><b>Web login: </b></th>
+                            <th class="wallet-item"><b>Web password: </b></th>
+                            <th class="wallet-item"><b>Web description: </b></th>
+                            <th class="wallet-item"><b>Owner note: </b></th>
+                            <th class="wallet-item"><b>Actions: </b></th>
+                        </tr>
+                        </thead>
+                        <th:block th:each="sharePassword : ${userSharedPasswords}">
+                            <tr id="wallet-shared-passwords-table" class="wallet-items" >
+                                <td class="wallet-item">
+                                    <th:block th:text="${sharePassword.owner.login}"></th:block>
+                                </td>
+                                <td class="wallet-item">
+                                    <th:block th:text="${sharePassword.consumer.login}"></th:block>
+                                </td>
+                                <td class="wallet-item">
+                                    <th:block th:text="${sharePassword.date}"></th:block>
+                                </td>
+                                <td class="wallet-item">
+                                    <th:block th:text="${sharePassword.address}"></th:block>
+                                </td>
+                                <td class="wallet-item">
+                                    <th:block th:text="${sharePassword.login}"></th:block>
+                                </td>
+                                <td class="wallet-item ">
+                                    <div class="password-hide">
+                                    <th:block  th:text="${sharePassword.password}"></th:block>
+                                    </div>
+                                </td>
+                                <td class="wallet-item">
+                                    <th:block th:text="${sharePassword.description}"></th:block>
+                                </td>
+                                <td class="wallet-item">
+                                    <th:block th:text="${sharePassword.ownerNote}"></th:block>
+                                </td>
+                                <td class="wallet-item">
+                                    <form method="post" class="btn delete-share-password-button" th:action="@{wallet/delete/{id}(id=${sharePassword.id})}">
+                                        <input class="btn" type="submit" value="Delete">
+                                    </form>
+                                </td>
+                            </tr>
+                        </th:block>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <!-- Share Password For User Table-->
+        <div class="container-table100">
+            <div class="wrap-table100">
+                <h2>Shared password for you</h2>
+                <div class="wallet-content">
+                    <table class="wallet-list">
+                        <thead>
+                        <tr class="table100-head">
+                            <th class="wallet-item"><b>Owner: </b></th>
+                            <th class="wallet-item"><b>Consumer: </b></th>
+                            <th class="wallet-item"><b>Share date: </b></th>
+                            <th class="wallet-item"><b>Web address: </b></th>
+                            <th class="wallet-item"><b>Web login: </b></th>
+                            <th class="wallet-item"><b>Web password: </b></th>
+                            <th class="wallet-item"><b>Web description: </b></th>
+                            <th class="wallet-item"><b>Owner note: </b></th>
+                            <th class="wallet-item"><b>Actions: </b></th>
+                        </tr>
+                        </thead>
+                        <th:block th:each="sharePassword : ${sharedPasswordsForUser}">
+                            <tr id="wallet-shared-passwords-for-user-table" class="wallet-items" >
+                                <td class="wallet-item">
+                                    <th:block th:text="${sharePassword.owner.login}"></th:block>
+                                </td>
+                                <td class="wallet-item">
+                                    <th:block th:text="${sharePassword.consumer.login}"></th:block>
+                                </td>
+                                <td class="wallet-item">
+                                    <th:block th:text="${sharePassword.date}"></th:block>
+                                </td>
+                                <td class="wallet-item">
+                                    <th:block th:text="${sharePassword.address}"></th:block>
+                                </td>
+                                <td class="wallet-item">
+                                    <th:block th:text="${sharePassword.login}"></th:block>
+                                </td>
+                                <td class="wallet-item">
+                                    <div class="password-hide">
+                                    <th:block th:text="${sharePassword.password}"></th:block>
+                                    </div>
+                                </td>
+                                <td class="wallet-item">
+                                    <th:block th:text="${sharePassword.description}"></th:block>
+                                </td>
+                                <td class="wallet-item">
+                                    <th:block th:text="${sharePassword.ownerNote}"></th:block>
+                                </td>
+                                <td class="wallet-item">
+                                    <button disabled class="btn delete-share-password-button disabled" th:value="${sharePassword.id}">Delete</button>
+                                </td>
+                            </tr>
+                        </th:block>
+                    </table>
+                </div>
+            </div>
+        </div>
+        <!-- Modal Share Password Section -->
+    </div>
+
+    <!--USER LOGS TABLE-->
+    <div class="user-logs-table">
+        <div class="container-table100">
+            <div class="wrap-user-logs">
+                <div id="userLogs">
+                    <h2>User Logs: </h2>
+                    <table>
+                        <thead>
+                        <tr class="table100-head">
+                            <th class="col-3">Ip Address:</th>
+                            <th class="col-3">Status:</th>
+                            <th class="col-3">Timestamp:</th>
+                        </tr>
+                        </thead>
+                        <tr th:each="userLog : ${userLogs}">
+                            <td class="col-3" th:text="${userLog.getIpAddress()}"></td>
+                            <td class="col-3" th:text="${userLog.getResult()}"></td>
+                            <td class="col-3" th:text="${userLog.getTimestamp()}"></td>
+                        </tr>
+                    </table>
+                </div>
+            </div>
+        </div>
     </div>
 </div>
-<button id="showNewPasswordForm">Add new password to wallet</button>
-<div id="password-form" class="add-new-password hidden-form">
-    <form th:action="@{/wallet/add}" th:object="${passwordForm}" method="post">
-        <table>
-            <tr>
-                <td><label th:for="*{webAddress}">Web Address: </label></td>
-                <td><input type="text" th:field="*{webAddress}"></td>
-            </tr>
-            <tr>
-                <td><label th:for="*{webDescription}">Description: </label></td>
-                <td><input type="text" th:field="*{webDescription}"></td>
-            </tr>
-            <tr>
-                <td><label th:for="*{webLogin}">Login: </label></td>
-                <td><input type="text" th:field="*{webLogin}"></td>
-            </tr>
-            <tr>
-                <td><label th:for="*{webPassword}">Password: </label></td>
-                <td><input type="password" th:field="*{webPassword}"></td>
-            </tr>
-        </table>
-        <input type="submit" value="Add">
-    </form>
+
+<div class="bg-modal">
+    <div class="modal-content">
+        <div id="modal-close" class="close">+</div>
+        <div class="modal-title">
+            <h2>Password Share</h2>
+        </div>
+        <div class="modal-img"><img th:src="@{/img/share.png}" width="80" height="80"/> </div>
+        <form th:action="@{/wallet/share-password}" th:object="${sharedPasswordForm}" id="share-password-form" method="post">
+            <input type="hidden" id="password-id" th:field="*{passwordId}" value="">
+            <label>Type which user you want to share:</label><br>
+            <span th:if="${#fields.hasErrors('consumerLogin')}" th:errors="*{consumerLogin}" class="error">Error</span>
+            <input th:field="*{consumerLogin}" type="text">
+            <label>Confirm with your account password:</label><br>
+            <span th:if="${#fields.hasErrors('confirmPassword')}" th:errors="*{confirmPassword}" class="error">Error</span>
+            <input th:field="*{confirmPassword}" type="password">
+            <input type="submit" value="Confirm">
+        </form>
+    </div>
 </div>
+
+<div class="bg-modal-edit">
+    <div class="modal-content-edit">
+        <div class="close-edit-form">+</div>
+        <div class="modal-title-edit">
+            <h2>Edit password from wallet</h2>
+        </div>
+        <div class="modal-img-edit"><img th:src="@{/img/edit.webp}" width="62" height="62"></div>
+        <form th:action="@{/wallet/edit/process}" th:object="${passwordEditForm}" method="post">
+            <table>
+                <tr style="display: none">
+                    <td>Id:</td>
+                    <td><input type="number" id="password-edit-id" th:field="*{id}"/></td>
+                </tr>
+                <tr>
+                    <td><label th:for="*{webAddress}">Web Address: </label></td>
+                    <td><input type="text" id="password-edit-address" th:field="*{webAddress}"></td>
+                </tr>
+                <tr>
+                    <td><label th:for="*{webDescription}">Description: </label></td>
+                    <td><input type="text" id="password-edit-description" th:field="*{webDescription}"></td>
+                </tr>
+                <tr>
+                    <td><label th:for="*{webLogin}">Login: </label></td>
+                    <td><input type="text" id="password-edit-login" th:field="*{webLogin}"></td>
+                </tr>
+                <tr>
+                    <td><label th:for="*{webPassword}">Password: </label></td>
+                    <td><input type="text" id="password-edit-password" th:field="*{webPassword}"></td>
+                </tr>
+                <tr>
+                    <td colspan="2"><input type="submit" value="Edit" /></td>
+                </tr>
+            </table>
+        </form>
+    </div>
+</div>
+
+
+
+
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+        integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+        crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+        crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+        crossorigin="anonymous"></script>
 <script th:src="@{/js/main.js}"></script>
 </body>
 </html>

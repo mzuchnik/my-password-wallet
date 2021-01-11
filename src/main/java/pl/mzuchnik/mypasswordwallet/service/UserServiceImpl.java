@@ -11,6 +11,8 @@ import pl.mzuchnik.mypasswordwallet.entity.Password;
 import pl.mzuchnik.mypasswordwallet.entity.User;
 import pl.mzuchnik.mypasswordwallet.repo.UserRepo;
 
+import java.util.Optional;
+
 @Service
 public class UserServiceImpl implements UserService {
 
@@ -22,10 +24,8 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public User findByLogin(String login) {
-        return userRepo.findByLogin(login).orElseThrow(
-                () -> new UsernameNotFoundException("Cannot find user with login: " + login)
-        );
+    public Optional<User> findByLogin(String login) {
+        return userRepo.findByLogin(login);
     }
 
     @Override
@@ -52,5 +52,10 @@ public class UserServiceImpl implements UserService {
             case "hmac": return new HmacPasswordEncoder();
             default: return null;
         }
+    }
+
+    @Override
+    public boolean exitsByLogin(String login) {
+        return userRepo.existsByLogin(login);
     }
 }

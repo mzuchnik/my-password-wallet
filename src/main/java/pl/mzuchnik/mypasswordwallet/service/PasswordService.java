@@ -14,4 +14,6 @@ public interface PasswordService {
     List<Password> findByUserId(Long id);
 
     void saveForUser(Password password, User user);
+
+    boolean passwordIdExits(Long id);
 }

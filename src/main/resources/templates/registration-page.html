@@ -4,33 +4,35 @@
 <head>
     <meta charset="UTF-8">
     <title>Registration</title>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
+          integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+    <link rel="stylesheet" th:href="@{/css/style.css}"/>
 </head>
 <body>
-<form th:action="@{/sign-up}" method="post" th:object="${user}">
-    <table>
-        <tr>
-            <td><label th:for="*{login}">Login: </label></td>
-            <td><input type="text" th:field="*{login}"></td>
-        </tr>
-        <tr>
-            <td><label th:for="*{password}">Password: </label></td>
-            <td><input type="password" th:field="*{password}"></td>
-        </tr>
-        <tr>
-            <td>Password encryption type:</td>
-        </tr>
-        <tr>
-            <td><input type="radio" id="sha" name="encrypt-type" value="bcrypt" checked>
-                <label for="sha">SHA</label>
-            </td>
-            <td>
-                <input type="radio" id="hmac" name="encrypt-type" value="hmac">
-                <label for="sha">Hmac</label>
-            </td>
-        <tr>
-            <td><input type="submit" value="Sign up"></td>
-        </tr>
-    </table>
-</form>
+<div class="registration">
+    <h1>Create account.</h1>
+    <form th:action="@{/sign-up}" method="post" th:object="${user}">
+        <label th:for="*{login}">Login: </label>
+        <input type="text" th:field="*{login}">
+        <label th:for="*{password}">Password: </label>
+        <input type="password" th:field="*{password}">
+        Password encryption type:
+        <input type="radio" id="sha" name="encrypt-type" value="bcrypt" checked>
+        <label for="sha">SHA</label>
+        <input type="radio" id="hmac" name="encrypt-type" value="hmac">
+        <label for="sha">Hmac</label>
+        <input type="submit" value="Sign up">
+    </form>
+</div>
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"
+        integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+        crossorigin="anonymous"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"
+        integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+        crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"
+        integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+        crossorigin="anonymous"></script>
+<script th:src="@{/js/main.js}"></script>
 </body>
 </html>

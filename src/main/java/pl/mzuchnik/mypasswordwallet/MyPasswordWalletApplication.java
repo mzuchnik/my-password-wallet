@@ -33,13 +33,13 @@ public class MyPasswordWalletApplication {
     @EventListener(ApplicationReadyEvent.class)
     public void init() {
 
-        userService.save(createAdmin());
+        User admin = createAdmin();
+        userService.save(admin);
 
-        User admin = userService.findByLogin("admin");
         Password password = new Password("facebook","facebookLogin","facebookHaslo");
         Password password2 = new Password("facebook","facebookLogin","facebookHaslo123");
-        passwordService.saveForUser(password,admin);
-        passwordService.saveForUser(password2,admin);
+        passwordService.saveForUser(password, admin);
+        passwordService.saveForUser(password2, admin);
 
 
     }

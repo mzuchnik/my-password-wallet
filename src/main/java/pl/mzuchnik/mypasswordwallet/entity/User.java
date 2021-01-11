@@ -15,9 +15,14 @@ public class User {
     @OneToMany(cascade = CascadeType.ALL, fetch=FetchType.EAGER, mappedBy = "user")
     private List<Password> userPasswords;
 
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "owner")
+    private List<SharedPassword> ownerSharedPassword;
+
+    @OneToMany(cascade = CascadeType.ALL, mappedBy = "consumer")
+    private List<SharedPassword> userSharedPassword;
+
     private String login;
     private String password;
-
 
     public User() {
     }
@@ -63,5 +68,21 @@ public class User {
 
     public void setUserPasswords(List<Password> userPasswords) {
         this.userPasswords = userPasswords;
+    }
+
+    public List<SharedPassword> getOwnerSharedPassword() {
+        return ownerSharedPassword;
+    }
+
+    public void setOwnerSharedPassword(List<SharedPassword> ownerSharedPassword) {
+        this.ownerSharedPassword = ownerSharedPassword;
+    }
+
+    public List<SharedPassword> getUserSharedPassword() {
+        return userSharedPassword;
+    }
+
+    public void setUserSharedPassword(List<SharedPassword> userSharedPassword) {
+        this.userSharedPassword = userSharedPassword;
     }
 }

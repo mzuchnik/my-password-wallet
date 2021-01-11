@@ -1,10 +1,6 @@
 package pl.mzuchnik.mypasswordwallet.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.crypto.encrypt.AesBytesEncryptor;
-import org.springframework.security.crypto.encrypt.BouncyCastleAesCbcBytesEncryptor;
-import org.springframework.security.crypto.encrypt.BytesEncryptor;
-import org.springframework.security.crypto.encrypt.TextEncryptor;
 import org.springframework.stereotype.Service;
 import pl.mzuchnik.mypasswordwallet.encoder.AesEncryptor;
 import pl.mzuchnik.mypasswordwallet.entity.Password;
@@ -51,5 +47,10 @@ public class PasswordServiceImpl implements PasswordService {
         }
 
         passwordRepo.save(password);
+    }
+
+    @Override
+    public boolean passwordIdExits(Long id) {
+        return passwordRepo.existsById(id);
     }
 }

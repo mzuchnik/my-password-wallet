@@ -2,6 +2,7 @@ package pl.mzuchnik.mypasswordwallet.entity;
 
 import javax.persistence.*;
 import java.sql.Timestamp;
+import java.util.List;
 
 @Entity
 @Table(name = "userLogs")
@@ -17,6 +18,9 @@ public class UserLog {
 
     private String ipAddress;
 
+    @OneToOne(cascade = CascadeType.ALL)
+    private PasswordHistory passwordHistory;
+
     @ManyToOne
     @JoinColumn(name = "user")
     private User user;
@@ -29,6 +33,7 @@ public class UserLog {
         this.result = result;
         this.ipAddress = ipAddress;
     }
+
 
     public Long getId() {
         return id;
@@ -68,5 +73,13 @@ public class UserLog {
 
     public void setUser(User user) {
         this.user = user;
+    }
+
+    public PasswordHistory getPasswordHistory() {
+        return passwordHistory;
+    }
+
+    public void setPasswordHistory(PasswordHistory passwordHistory) {
+        this.passwordHistory = passwordHistory;
     }
 }

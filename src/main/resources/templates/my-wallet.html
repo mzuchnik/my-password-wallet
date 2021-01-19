@@ -235,12 +235,16 @@
                             <th class="col-3">Ip Address:</th>
                             <th class="col-3">Status:</th>
                             <th class="col-3">Timestamp:</th>
+                            <th class="col-3">Action:</th>
                         </tr>
                         </thead>
                         <tr th:each="userLog : ${userLogs}">
                             <td class="col-3" th:text="${userLog.getIpAddress()}"></td>
                             <td class="col-3" th:text="${userLog.getResult()}"></td>
                             <td class="col-3" th:text="${userLog.getTimestamp()}"></td>
+                            <td th:if="*{userLog.getPasswordHistory() != null}"><form method="post" th:action="@{/wallet/rollback/{id}(id = *{userLog.getId()})}">
+                            <input type="submit" value="Rollback">
+                            </form></td>
                         </tr>
                     </table>
                 </div>

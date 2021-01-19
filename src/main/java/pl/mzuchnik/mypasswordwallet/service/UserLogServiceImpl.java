@@ -7,6 +7,7 @@ import pl.mzuchnik.mypasswordwallet.entity.UserLog;
 import pl.mzuchnik.mypasswordwallet.repo.UserLogRepo;
 
 import java.util.List;
+import java.util.Optional;
 
 @Service
 public class UserLogServiceImpl implements UserLogService{
@@ -26,5 +27,10 @@ public class UserLogServiceImpl implements UserLogService{
     @Override
     public void save(UserLog userLog) {
         userLogRepo.save(userLog);
+    }
+
+    @Override
+    public Optional<UserLog> findById(long id) {
+        return userLogRepo.findById(id);
     }
 }

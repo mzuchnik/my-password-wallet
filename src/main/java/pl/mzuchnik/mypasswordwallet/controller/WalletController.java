@@ -9,18 +9,18 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import pl.mzuchnik.mypasswordwallet.encoder.AesEncryptor;
-import pl.mzuchnik.mypasswordwallet.entity.Password;
-import pl.mzuchnik.mypasswordwallet.entity.SharedPassword;
-import pl.mzuchnik.mypasswordwallet.entity.User;
-import pl.mzuchnik.mypasswordwallet.entity.UserLog;
+import pl.mzuchnik.mypasswordwallet.entity.*;
 import pl.mzuchnik.mypasswordwallet.form.SharedPasswordForm;
 import pl.mzuchnik.mypasswordwallet.service.PasswordService;
 import pl.mzuchnik.mypasswordwallet.service.SharedPasswordService;
 import pl.mzuchnik.mypasswordwallet.service.UserLogService;
 import pl.mzuchnik.mypasswordwallet.service.UserService;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.validation.Valid;
 import java.security.Principal;
+import java.sql.Timestamp;
+import java.time.Instant;
 import java.util.List;
 import java.util.Optional;
 
@@ -99,8 +99,12 @@ public class WalletController {
     }
 
     @PostMapping("/edit/process")
-    public String processEditedPasswordFromWallet(@ModelAttribute Password passwordEditForm, Authentication authentication){
+    public String processEditedPasswordFromWallet(@ModelAttribute Password passwordEditForm, Authentication authentication, HttpServletRequest request){
         User user = userService.findByLogin(authentication.getName()).get();
+        UserLog userLog = new UserLog(Timestamp.from(Instant.now()),"Change Password", request.getRemoteAddr());
+        userLog.setUser(user);
+        userLog.setPasswordHistory(new PasswordHistory(passwordService.findById(passwordEditForm.getId())));
+        userLogService.save(userLog);
         passwordService.saveForUser(passwordEditForm, user);
         return "redirect:/wallet";
     }
@@ -141,6 +145,18 @@ public class WalletController {
         SharedPassword sharedPassword = new SharedPassword(owner, consumer, false, passwordFromWallet.getWebAddress(), passwordFromWallet.getWebDescription(), passwordFromWallet.getWebLogin(), passwordFromWallet.getWebPassword(), "Empty note");
         sharedPasswordService.save(sharedPassword);
 
+        return "redirect:/wallet";
+    }
+
+    @PostMapping("/rollback/{id}")
+    public String processRollback(@PathVariable Long id, Authentication authentication){
+        User user = userService.findByLogin(authentication.getName()).get();
+        UserLog userLog = userLogService.findById(id).get();
+        PasswordHistory ph = userLog.getPasswordHistory();
+        Password password = new Password(ph.getWebAddress(),ph.getWebLogin(),ph.getWebPassword(),ph.getWebDescription());
+        password.setId(ph.getPasswordId());
+        password.setUser(user);
+        passwordService.save(password);
         return "redirect:/wallet";
     }
 

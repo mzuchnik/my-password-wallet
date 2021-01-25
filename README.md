@@ -3,7 +3,7 @@
 ### Wstęp:
 
 Aplikacja służy do składowania haseł użytkownika dla poszczególnych serwisów internetowych np: facebook, youtube itp..., w bezpieczny sposób. 
-Dodatkowo użytkownik, może dzielić się wybranymi hasłami do serwisów z innymi użytkownikami na zasadzie współdzieleniu hasła. 
+Dodatkowo użytkownik, może dzielić się wybranymi hasłami do serwisów z innymi użytkownikami na zasadzie współdzielenia hasła. 
 
 ### Funkcjonalność:
 
